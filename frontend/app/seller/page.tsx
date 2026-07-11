@@ -78,6 +78,36 @@ export default function SellerPage() {
   }, []);
 
   const handleAddProduct = async () => {
+    if (!productData.name.trim()) {
+  toast.error("Product name is required");
+  return;
+}
+
+if (!productData.price || Number(productData.price) <= 0) {
+  toast.error("Please enter a valid price");
+  return;
+}
+
+if (!productData.stock || Number(productData.stock) <= 0) {
+  toast.error("Please enter a valid stock quantity");
+  return;
+}
+
+if (!productData.category_id) {
+  toast.error("Please select a category");
+  return;
+}
+
+if (!productData.image.trim()) {
+  toast.error("Product image is required");
+  return;
+}
+
+if (!productData.description.trim()) {
+  toast.error("Product description is required");
+  return;
+}
+
     try {
       const user = JSON.parse(localStorage.getItem("user") || "{}");
       const result = await createProduct({
@@ -177,18 +207,50 @@ export default function SellerPage() {
               <FiPlus size={16} />
             </div>
             <h2 className="text-lg font-bold text-gray-900">Add Product</h2>
+            <p className="text-red-400 text-sm font-medium mb-5">
+  * All fields marked are required before submitting the product.
+</p>
           </div>
           <div className="h-0.5 w-10 bg-gradient-to-r from-orange-500 to-amber-400 rounded-full mb-6" />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="text" placeholder="Product Name" className={inputClass}
+
+            <div>
+          <label className="text-gray-700 font-medium">
+  Product Name <span className="text-red-500">*</span>
+</label>
+            <input type="text" placeholder="Enter product name" className={inputClass}
               onChange={(e) => setProductData({ ...productData, name: e.target.value })} />
-            <input type="number" placeholder="Price" className={inputClass}
+              </div>
+
+              <div>
+            <label className="text-gray-700 font-medium">
+  Price <span className="text-red-500">*</span>
+</label>
+            <input type="number" placeholder="Enter price" className={inputClass}
               onChange={(e) => setProductData({ ...productData, price: e.target.value })} />
-            <input type="number" placeholder="Stock" className={inputClass}
+              </div>
+
+            <div>
+            <label className="text-gray-700 font-medium">
+  Stock Quantity <span className="text-red-500">*</span>
+</label>
+            <input type="number" placeholder="Enter stock quantity" className={inputClass}
               onChange={(e) => setProductData({ ...productData, stock: e.target.value })} />
-            <input type="text" placeholder="Image URL" className={inputClass}
+              </div>
+
+              <div>
+            <label className="text-gray-700 font-medium">
+  Image URL <span className="text-red-500">*</span>
+</label>
+            <input type="text" placeholder="Enter image URL" className={inputClass}
               onChange={(e) => setProductData({ ...productData, image: e.target.value })} />
+              </div>
+
+              <div>
+            <label className="text-gray-700 font-medium">
+  Category <span className="text-red-500">*</span>
+</label>
             <select
               className={inputClass}
               onChange={(e) => setProductData({ ...productData, category_id: e.target.value })}
@@ -204,11 +266,15 @@ export default function SellerPage() {
               <option value="8">Speakers</option>
               <option value="9">Accessories</option>
             </select>
+            </div>
           </div>
-
+          
+<label className="text-gray-700 font-medium mb-2 block">
+  Description <span className="text-red-500">*</span>
+</label>
           <textarea
             rows={4}
-            placeholder="Description"
+            placeholder="Enter product description"
             className={`${inputClass} mt-4 resize-none`}
             onChange={(e) => setProductData({ ...productData, description: e.target.value })}
           />
