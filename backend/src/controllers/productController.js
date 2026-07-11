@@ -76,14 +76,14 @@ const getProducts = async (req, res) => {
       products
     });
 
-  } catch (error) {
+  }catch (error) {
+  console.error("Get Products Error:", error);
 
-    res.status(500).json({
-      success: false,
-      message: "Server Error"
-    });
-
-  }
+  res.status(500).json({
+    success: false,
+    message: error.message
+  });
+}
 };
 
 // Get Single Product
