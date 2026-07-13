@@ -35,7 +35,7 @@ export default function Navbar() {
     setIsLoggedIn(!!token);
     setRole(user.role || "");
 
-    fetch("http://localhost:5000/api/categories")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`)
       .then((res) => res.json())
       .then((data) => {
         setCategories(data.categories || []);

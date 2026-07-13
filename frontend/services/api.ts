@@ -1,4 +1,5 @@
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 export async function registerUser(data: {
   name: string;
@@ -37,7 +38,7 @@ export async function addToCart(data: {
   quantity: number;
 }) {
   const response = await fetch(
-    "http://localhost:5000/api/cart",
+    `${BASE_URL}/cart`,
     {
       method: "POST",
       headers: {
@@ -55,7 +56,7 @@ export async function addToWishlist(data: {
   product_id: number;
 }) {
   const response = await fetch(
-    "http://localhost:5000/api/wishlist",
+    `${BASE_URL}/wishlist`,
     {
       method: "POST",
       headers: {
@@ -70,7 +71,7 @@ export async function addToWishlist(data: {
 
 export async function createPaymentOrder(amount: number) {
   const response = await fetch(
-    "http://localhost:5000/api/payment/create-order",
+    `${BASE_URL}/payment/create-order`,
     {
       method: "POST",
       headers: {
@@ -85,7 +86,7 @@ export async function createPaymentOrder(amount: number) {
 
 export async function getCart(userId: number) {
   const response = await fetch(
-    `http://localhost:5000/api/cart/${userId}`
+    `${BASE_URL}/cart/${userId}`
   );
 
   return response.json();
@@ -93,7 +94,7 @@ export async function getCart(userId: number) {
 
 export async function createOrder(data: any) {
   const response = await fetch(
-    "http://localhost:5000/api/orders",
+    `${BASE_URL}/orders`,
     {
       method: "POST",
       headers: {
@@ -108,7 +109,7 @@ export async function createOrder(data: any) {
 
 export async function getOrders(userId: number) {
   const response = await fetch(
-    `http://localhost:5000/api/orders/${userId}`
+    `${BASE_URL}/orders/${userId}`
   );
 
   return response.json();
@@ -116,7 +117,7 @@ export async function getOrders(userId: number) {
 
 export async function getWishlist(userId: number) {
   const response = await fetch(
-    `http://localhost:5000/api/wishlist/${userId}`
+    `${BASE_URL}/wishlist/${userId}`
   );
 
   return response.json();
@@ -124,7 +125,7 @@ export async function getWishlist(userId: number) {
 
 export async function removeWishlist(id: number) {
   const response = await fetch(
-    `http://localhost:5000/api/wishlist/${id}`,
+    `${BASE_URL}/wishlist/${id}`,
     {
       method: "DELETE",
     }
@@ -135,7 +136,7 @@ export async function removeWishlist(id: number) {
 
 export async function createProduct(data: any) {
   const response = await fetch(
-    "http://localhost:5000/api/products",
+    `${BASE_URL}/products`,
     {
       method: "POST",
       headers: {
@@ -153,7 +154,7 @@ export async function updateProduct(
   data: any
 ) {
   const response = await fetch(
-    `http://localhost:5000/api/products/${id}`,
+    `${BASE_URL}/products/${id}`,
     {
       method: "PUT",
       headers: {
@@ -168,7 +169,7 @@ export async function updateProduct(
 
 export async function deleteProduct(id: number) {
   const response = await fetch(
-    `http://localhost:5000/api/products/${id}`,
+    `${BASE_URL}/products/${id}`,
     {
       method: "DELETE",
     }
@@ -179,7 +180,7 @@ export async function deleteProduct(id: number) {
 
 export async function getAdminUsers() {
   const response = await fetch(
-    "http://localhost:5000/api/admin/users"
+    `${BASE_URL}/admin/users`
   );
 
   return response.json();
@@ -187,7 +188,7 @@ export async function getAdminUsers() {
 
 export async function getAdminProducts() {
   const response = await fetch(
-    "http://localhost:5000/api/admin/products"
+    `${BASE_URL}/admin/products`
   );
 
   return response.json();
@@ -195,7 +196,7 @@ export async function getAdminProducts() {
 
 export async function getAdminOrders() {
   const response = await fetch(
-    "http://localhost:5000/api/admin/orders"
+    `${BASE_URL}/admin/orders`
   );
 
   return response.json();
@@ -206,7 +207,7 @@ export async function updateUserRole(
   role: string
 ) {
   const response = await fetch(
-    `http://localhost:5000/api/admin/users/${id}`,
+    `${BASE_URL}/admin/users/${id}`,
     {
       method: "PUT",
       headers: {
@@ -221,7 +222,7 @@ export async function updateUserRole(
 
 export async function deleteAdminProduct(id: number) {
   const response = await fetch(
-    `http://localhost:5000/api/admin/products/${id}`,
+    `${BASE_URL}/admin/products/${id}`,
     {
       method: "DELETE",
     }

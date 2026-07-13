@@ -65,7 +65,7 @@ export default function AdminPage() {
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/admin/dashboard")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/dashboard`)
       .then((res) => res.json())
       .then((data) => setDashboard(data));
 

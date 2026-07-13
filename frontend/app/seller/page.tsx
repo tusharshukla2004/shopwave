@@ -60,19 +60,19 @@ export default function SellerPage() {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-    fetch(`http://localhost:5000/api/seller/products/${user.id}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/seller/products/${user.id}`)
       .then((res) => res.json())
       .then((data) => setProducts(data.products || []));
 
-    fetch(`http://localhost:5000/api/seller/orders/${user.id}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/seller/orders/${user.id}`)
       .then((res) => res.json())
       .then((data) => setOrders(data.orders || []));
 
-    fetch(`http://localhost:5000/api/seller/revenue/${user.id}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/seller/revenue/${user.id}`)
       .then((res) => res.json())
       .then((data) => setRevenue(Number(data.revenue[0]?.totalRevenue || 0)));
 
-    fetch(`http://localhost:5000/api/seller/inventory/${user.id}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/seller/inventory/${user.id}`)
       .then((res) => res.json())
       .then((data) => setInventory(data.inventory || []));
   }, []);
