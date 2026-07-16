@@ -19,7 +19,10 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: [
+      "http://localhost:3000",
+      "https://shopwave-nine.vercel.app",
+    ],
     credentials: true,
   })
 );
