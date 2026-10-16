@@ -1,4 +1,5 @@
 const express = require("express");
+const { protect, authorize } = require("../middleware/authMiddleware");
 
 const {
   getSellerProducts,
@@ -9,6 +10,7 @@ const {
 
 const router = express.Router();
 
+router.use(protect, authorize("SELLER"));
 router.get("/products/:sellerId",getSellerProducts);
 
 router.get("/orders/:sellerId",getSellerOrders);

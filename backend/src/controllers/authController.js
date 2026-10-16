@@ -5,22 +5,34 @@ const jwt = require("jsonwebtoken");
 // REGISTER
 const register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password } = req.body || {};
+    const normalizedName = typeof name === "string" ? name.trim() : "";
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+    const passwordBytes = typeof password === "string"
+      ? Buffer.byteLength(password, "utf8")
+      : 0;
 
-    if (!name || !email || !password) {
+    if (
+      !normalizedName ||
+      normalizedName.length > 150 ||
+      normalizedEmail.length > 255 ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail) ||
+      passwordBytes < 8 ||
+      passwordBytes > 72
+    ) {
       return res.status(400).json({
         success: false,
-        message: "All fields are required",
+        message: "Provide a valid name and email, and a password between 8 and 72 bytes",
       });
     }
 
     const [existingUser] = await db.query(
-      "SELECT * FROM users WHERE email = ?",
-      [email]
+      "SELECT id FROM users WHERE email = ?",
+      [normalizedEmail]
     );
 
     if (existingUser.length > 0) {
-      return res.status(400).json({
+      return res.status(409).json({
         success: false,
         message: "User already exists",
       });
@@ -30,12 +42,7 @@ const register = async (req, res) => {
 
     await db.query(
       "INSERT INTO users(name,email,password,role) VALUES (?,?,?,?)",
-      [
-        name,
-        email,
-        hashedPassword,
-        role || "CUSTOMER",
-      ]
+      [normalizedName, normalizedEmail, hashedPassword, "CUSTOMER"]
     );
 
     res.status(201).json({
@@ -44,6 +51,12 @@ const register = async (req, res) => {
     });
 
   } catch (error) {
+    if (error.code === "ER_DUP_ENTRY") {
+      return res.status(409).json({
+        success: false,
+        message: "User already exists",
+      });
+    }
     console.error(error);
 
     res.status(500).json({
@@ -56,11 +69,24 @@ const register = async (req, res) => {
 // LOGIN
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body || {};
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+
+    if (
+      !normalizedEmail ||
+      typeof password !== "string" ||
+      !password ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "A valid email and password are required",
+      });
+    }
 
     const [users] = await db.query(
       "SELECT * FROM users WHERE email=?",
-      [email]
+      [normalizedEmail]
     );
 
     if (users.length === 0) {

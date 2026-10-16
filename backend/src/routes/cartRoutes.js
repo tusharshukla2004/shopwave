@@ -1,4 +1,5 @@
 const express = require("express");
+const { protect } = require("../middleware/authMiddleware");
 
 const {
   addToCart,
@@ -9,6 +10,7 @@ const {
 
 const router = express.Router();
 
+router.use(protect);
 router.post("/", addToCart);
 
 router.get("/:userId", getCart);

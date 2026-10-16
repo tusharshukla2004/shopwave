@@ -1,4 +1,5 @@
 const express = require("express");
+const { protect, authorize } = require("../middleware/authMiddleware");
 
 const {
   createCategory,
@@ -7,7 +8,7 @@ const {
 
 const router = express.Router();
 
-router.post("/", createCategory);
+router.post("/", protect, authorize("ADMIN"), createCategory);
 router.get("/", getCategories);
 
 module.exports = router;

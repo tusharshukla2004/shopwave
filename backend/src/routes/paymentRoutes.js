@@ -1,4 +1,5 @@
 const express = require("express");
+const { protect } = require("../middleware/authMiddleware");
 
 const {
   createPaymentOrder,
@@ -7,6 +8,7 @@ const {
 
 const router = express.Router();
 
+router.use(protect);
 router.post("/create-order", createPaymentOrder);
 
 router.post("/verify", verifyPayment);

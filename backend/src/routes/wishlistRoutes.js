@@ -1,4 +1,5 @@
 const express = require("express");
+const { protect } = require("../middleware/authMiddleware");
 
 const {
   addToWishlist,
@@ -8,6 +9,7 @@ const {
 
 const router = express.Router();
 
+router.use(protect);
 router.post("/", addToWishlist);
 
 router.get("/:userId", getWishlist);

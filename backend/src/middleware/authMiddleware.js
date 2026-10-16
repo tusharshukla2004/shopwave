@@ -1,38 +1,54 @@
 const jwt = require("jsonwebtoken");
+const db = require("../config/db");
 
-const protect = (req, res, next) => {
+const protect = async (req, res, next) => {
+  const authorization = req.headers.authorization || "";
+  const match = authorization.match(/^Bearer\s+(\S+)$/i);
+  if (!match) {
+    return res.status(401).json({
+      success: false,
+      message: "Not authorized, no token",
+    });
+  }
+
   try {
-    let token;
-
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer")
-    ) {
-      token = req.headers.authorization.split(" ")[1];
-    }
-
-    if (!token) {
+    const decoded = jwt.verify(match[1], process.env.JWT_SECRET);
+    const [users] = await db.query(
+      "SELECT id, role FROM users WHERE id=?",
+      [decoded.id],
+    );
+    if (!users.length) {
       return res.status(401).json({
         success: false,
-        message: "Not authorized, no token",
+        message: "User account is no longer available",
       });
     }
 
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET
-    );
-
-    req.user = decoded;
-
-    next();
-
+    req.user = { ...decoded, id: users[0].id, role: users[0].role };
+    return next();
   } catch (error) {
-    return res.status(401).json({
+    if (error.name === "JsonWebTokenError" || error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        success: false,
+        message: "Token invalid",
+      });
+    }
+    console.error("Failed to authenticate request:", error);
+    return res.status(500).json({
       success: false,
-      message: "Token invalid",
+      message: "Unable to authenticate request",
     });
   }
 };
 
-module.exports = { protect };
+const authorize = (...roles) => (req, res, next) => {
+  if (!req.user || !roles.includes(req.user.role)) {
+    return res.status(403).json({
+      success: false,
+      message: "You are not authorized to access this resource",
+    });
+  }
+  return next();
+};
+
+module.exports = { protect, authorize };

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-labelledby="title">
+  <title id="title">Product image unavailable</title>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff7ed"/>
+      <stop offset="1" stop-color="#ffedd5"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="480" fill="url(#background)"/>
+  <circle cx="320" cy="210" r="104" fill="#fed7aa"/>
+  <path d="m250 178 70-38 70 38v82l-70 40-70-40z" fill="#f97316"/>
+  <path d="m250 178 70 40 70-40-70-38z" fill="#fb923c"/>
+  <path d="M320 218v82" fill="none" stroke="#fff7ed" stroke-width="8"/>
+  <text x="320" y="390" fill="#9a3412" font-family="Arial, sans-serif" font-size="24" font-weight="600" text-anchor="middle">Product image</text>
+</svg>

@@ -1,4 +1,5 @@
 const express = require("express");
+const { protect, authorize } = require("../middleware/authMiddleware");
 
 const {
   getUsers,
@@ -11,6 +12,7 @@ const {
 
 const router = express.Router();
 
+router.use(protect, authorize("ADMIN"));
 router.get("/users", getUsers);
 
 router.get("/products", getProducts);

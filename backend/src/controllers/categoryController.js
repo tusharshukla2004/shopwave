@@ -3,15 +3,21 @@ const db = require("../config/db");
 // Create Category
 const createCategory = async (req, res) => {
   try {
-    const { name } = req.body;
+    const name = typeof req.body?.name === "string" ? req.body.name.trim() : "";
+    if (!name || name.length > 150) {
+      return res.status(400).json({
+        success: false,
+        message: "A category name between 1 and 150 characters is required",
+      });
+    }
 
     const [existingCategory] = await db.query(
-      "SELECT * FROM categories WHERE name = ?",
+      "SELECT id FROM categories WHERE LOWER(name) = LOWER(?)",
       [name]
     );
 
     if (existingCategory.length > 0) {
-      return res.status(400).json({
+      return res.status(409).json({
         success: false,
         message: "Category already exists",
       });
@@ -28,7 +34,13 @@ const createCategory = async (req, res) => {
     });
 
   } catch (error) {
-    console.log(error);
+    if (error.code === "ER_DUP_ENTRY") {
+      return res.status(409).json({
+        success: false,
+        message: "Category already exists",
+      });
+    }
+    console.error("Failed to create category:", error);
 
     res.status(500).json({
       success: false,
